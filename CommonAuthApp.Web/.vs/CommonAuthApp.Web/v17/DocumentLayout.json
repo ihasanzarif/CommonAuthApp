@@ -1,0 +1,241 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{38DA0923-2999-4905-916B-81749CEE09F5}|CommonAuthApp.Web\\CommonAuthApp.Web.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.web\\middleware\\roleauthorizationmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{38DA0923-2999-4905-916B-81749CEE09F5}|CommonAuthApp.Web\\CommonAuthApp.Web.csproj|solutionrelative:commonauthapp.web\\middleware\\roleauthorizationmiddleware.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{38DA0923-2999-4905-916B-81749CEE09F5}|CommonAuthApp.Web\\CommonAuthApp.Web.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{38DA0923-2999-4905-916B-81749CEE09F5}|CommonAuthApp.Web\\CommonAuthApp.Web.csproj|solutionrelative:commonauthapp.web\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|solutionrelative:commonauthapp.api\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{38DA0923-2999-4905-916B-81749CEE09F5}|CommonAuthApp.Web\\CommonAuthApp.Web.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.web\\controllers\\gatewaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{38DA0923-2999-4905-916B-81749CEE09F5}|CommonAuthApp.Web\\CommonAuthApp.Web.csproj|solutionrelative:commonauthapp.web\\controllers\\gatewaycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{38DA0923-2999-4905-916B-81749CEE09F5}|CommonAuthApp.Web\\CommonAuthApp.Web.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{38DA0923-2999-4905-916B-81749CEE09F5}|CommonAuthApp.Web\\CommonAuthApp.Web.csproj|solutionrelative:commonauthapp.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|solutionrelative:commonauthapp.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.api\\data\\appdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|solutionrelative:commonauthapp.api\\data\\appdbcontextfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.api\\handlers\\passwordhashhandlers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|solutionrelative:commonauthapp.api\\handlers\\passwordhashhandlers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|solutionrelative:commonauthapp.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.api\\models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|solutionrelative:commonauthapp.api\\models\\usermodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.api\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|solutionrelative:commonauthapp.api\\data\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.api\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|solutionrelative:commonauthapp.api\\services\\authservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|d:\\my app projects\\commonauthapp.web\\commonauthapp.api\\models\\rolemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{AD8E3096-BBAD-4C5A-9D21-A124E5E85031}|CommonAuthApp.API\\CommonAuthApp.API.csproj|solutionrelative:commonauthapp.api\\models\\rolemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\appsettings.json",
+              "RelativeDocumentMoniker": "CommonAuthApp.Web\\appsettings.json",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\appsettings.json",
+              "RelativeToolTip": "CommonAuthApp.Web\\appsettings.json",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAABEAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-16T12:24:49.904Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AppDbContextFactory.cs",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Data\\AppDbContextFactory.cs",
+              "RelativeDocumentMoniker": "CommonAuthApp.API\\Data\\AppDbContextFactory.cs",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Data\\AppDbContextFactory.cs",
+              "RelativeToolTip": "CommonAuthApp.API\\Data\\AppDbContextFactory.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-16T11:18:41.207Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "RoleAuthorizationMiddleware.cs",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\Middleware\\RoleAuthorizationMiddleware.cs",
+              "RelativeDocumentMoniker": "CommonAuthApp.Web\\Middleware\\RoleAuthorizationMiddleware.cs",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\Middleware\\RoleAuthorizationMiddleware.cs",
+              "RelativeToolTip": "CommonAuthApp.Web\\Middleware\\RoleAuthorizationMiddleware.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAowCAAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-16T14:41:40.433Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "UserModel.cs",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Models\\UserModel.cs",
+              "RelativeDocumentMoniker": "CommonAuthApp.API\\Models\\UserModel.cs",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Models\\UserModel.cs",
+              "RelativeToolTip": "CommonAuthApp.API\\Models\\UserModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-16T11:24:09.197Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\Program.cs",
+              "RelativeDocumentMoniker": "CommonAuthApp.Web\\Program.cs",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\Program.cs",
+              "RelativeToolTip": "CommonAuthApp.Web\\Program.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACcAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-16T12:15:13.268Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AppDbContext.cs",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Data\\AppDbContext.cs",
+              "RelativeDocumentMoniker": "CommonAuthApp.API\\Data\\AppDbContext.cs",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Data\\AppDbContext.cs",
+              "RelativeToolTip": "CommonAuthApp.API\\Data\\AppDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-16T10:27:17.034Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "RoleModel.cs",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Models\\RoleModel.cs",
+              "RelativeDocumentMoniker": "CommonAuthApp.API\\Models\\RoleModel.cs",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Models\\RoleModel.cs",
+              "RelativeToolTip": "CommonAuthApp.API\\Models\\RoleModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-16T08:33:47.881Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "CommonAuthApp.API\\Controllers\\AuthController.cs",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "CommonAuthApp.API\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAkwA4AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-15T16:39:04.794Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\appsettings.json",
+              "RelativeDocumentMoniker": "CommonAuthApp.API\\appsettings.json",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\appsettings.json",
+              "RelativeToolTip": "CommonAuthApp.API\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-15T16:42:28.713Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "GatewayController.cs",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\Controllers\\GatewayController.cs",
+              "RelativeDocumentMoniker": "CommonAuthApp.Web\\Controllers\\GatewayController.cs",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\Controllers\\GatewayController.cs",
+              "RelativeToolTip": "CommonAuthApp.Web\\Controllers\\GatewayController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADEAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-16T14:20:26.165Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PasswordHashHandlers.cs",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Handlers\\PasswordHashHandlers.cs",
+              "RelativeDocumentMoniker": "CommonAuthApp.API\\Handlers\\PasswordHashHandlers.cs",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Handlers\\PasswordHashHandlers.cs",
+              "RelativeToolTip": "CommonAuthApp.API\\Handlers\\PasswordHashHandlers.cs",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAAAFMAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-16T11:35:17.217Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AuthService.cs",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Services\\AuthService.cs",
+              "RelativeDocumentMoniker": "CommonAuthApp.API\\Services\\AuthService.cs",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Services\\AuthService.cs",
+              "RelativeToolTip": "CommonAuthApp.API\\Services\\AuthService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-15T19:40:43.216Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Program.cs",
+              "RelativeDocumentMoniker": "CommonAuthApp.API\\Program.cs",
+              "ToolTip": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Program.cs",
+              "RelativeToolTip": "CommonAuthApp.API\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-15T16:41:33Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

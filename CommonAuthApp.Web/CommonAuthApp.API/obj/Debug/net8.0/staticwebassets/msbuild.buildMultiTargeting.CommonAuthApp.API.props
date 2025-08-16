@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\CommonAuthApp.API.props" />
+</Project>

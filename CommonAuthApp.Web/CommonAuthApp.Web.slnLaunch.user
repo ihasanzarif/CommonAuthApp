@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "CommonAuthApp.Web\\CommonAuthApp.Web.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "CommonAuthApp.API\\CommonAuthApp.API.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

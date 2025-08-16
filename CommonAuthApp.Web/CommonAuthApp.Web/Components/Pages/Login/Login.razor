@@ -1,0 +1,37 @@
+﻿@page "/login"
+@using CommonAuthApp.API.Models
+@using Layout
+@using Microsoft.AspNetCore.Components.Authorization
+@layout EmptyLayout
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProvider
+
+<div class="p-5">
+    <h3>Login</h3>
+    <EditForm Model="loginModel" FormName="Login" OnValidSubmit="HandleLogin">
+        <DataAnnotationsValidator/>
+        <div class="mb-3">
+            <label for="username">Username</label>
+            <InputText id="username" class="form-control" @bind-Value=@loginModel.Username />
+        </div>
+        <div class="mb-3">
+            <label for="password">Password</label>
+            <InputText id="password" class="form-control" @bind-Value=@loginModel.Password />
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Login</button>
+    </EditForm>
+</div> 
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private async Task HandleLogin()
+    {
+        // // var res = await AuthApiClient.PostAsync<LoginResponseModel, LoginModel>("/api/auth/login", loginModel);
+
+        // // if (res != null && res.Token != null){
+        // //     //Use CustomAuthStateProvider
+        // //     await ((CustomAuthStateProvider)AuthStateProvider).MarkUserAsAuthenticated(res);
+        // //     Navigation.NavigateTo("/weather");
+        // // }
+    }
+}

@@ -1,0 +1,25 @@
+{
+  "ShowEmptyProjects": false,
+  "SelectedGroups": [
+    "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\Resources\\ProductTranslation.resx"
+  ],
+  "ExpandedProjects": [
+    "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj"
+  ],
+  "EnableSpellChecker": true,
+  "ColumnOrder": [
+    "name",
+    "file-path",
+    "file-name",
+    "type",
+    "neutral-value",
+    "neutral-comment",
+    "fr"
+  ],
+  "VisibleColumnKeys": [
+    "name",
+    "neutral-comment",
+    "fr",
+    "neutral-value"
+  ]
+}
