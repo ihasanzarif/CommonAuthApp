@@ -1,13 +1,14 @@
-using CommonAuthApp.API.Data;
+﻿using CommonAuthApp.API.Data;
+using CommonAuthApp.API.Handlers;
 using CommonAuthApp.API.Repositories;
 using CommonAuthApp.API.Services;
 using CommonAuthApp.Repositories;
 using CommonAuthApp.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,33 +51,47 @@ builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
+// ✔️ Use the custom handler for Authorized data and use AddJwtBearer for login only
 string secret = builder.Configuration.GetValue<string>("Jwt:Secret");
 string issuer = builder.Configuration.GetValue<string>("Jwt:Issuer");
 string audience = builder.Configuration.GetValue<string>("Jwt:Audience");
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+builder.Services.AddAuthentication(options =>
 {
-    options.RequireHttpsMetadata = false;
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters()
+    options.DefaultAuthenticateScheme = "GatewayAuthentication";
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddScheme<AuthenticationSchemeOptions, ClaimsFromHeaderAuthenticationHandler>("GatewayAuthentication", null)
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = issuer,
-        ValidAudience = audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
-    };
-});
-builder.Services.AddAuthorization();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowBlazorApp", policy =>
-    {
-        policy.WithOrigins("https://localhost:7221") // Blazor app URLs
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = issuer,
+            ValidAudience = audience,
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secret))
+        };
     });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("JwtOnly", policy => policy.RequireAuthenticatedUser().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme));
+    options.AddPolicy("GatewayOnly", policy => policy.RequireAuthenticatedUser().AddAuthenticationSchemes("GatewayAuthentication"));  
+});
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+// Optional: configure supported cultures if you want globalization too
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "en", "fr", "de" }; // adjust to your needs
+    options.SetDefaultCulture("en")
+           .AddSupportedCultures(supportedCultures)
+           .AddSupportedUICultures(supportedCultures);
 });
 
 var app = builder.Build();
@@ -89,11 +104,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRequestLocalization();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
-app.UseCors("AllowBlazorApp");
 
 app.MapControllers();
 

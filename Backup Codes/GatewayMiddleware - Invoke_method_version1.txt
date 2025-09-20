@@ -1,0 +1,72 @@
+public class RoleAuthorizationMiddleware
+{
+    private readonly RequestDelegate _next;
+    private readonly HttpClient _httpClient;
+    private readonly IConfiguration _config;
+
+    public RoleAuthorizationMiddleware(RequestDelegate next, IHttpClientFactory clientFactory, IConfiguration config)
+    {
+        _next = next;
+        _httpClient = clientFactory.CreateClient();
+        _config = config;
+    }
+
+    public async Task Invoke(HttpContext context)
+    {
+        var serviceRoutes = _config.GetSection("ServiceRoutes").GetChildren();
+
+        foreach (var route in serviceRoutes)
+        {
+            var pathPrefix = route["PathPrefix"];
+            var destination = route["Destination"];
+
+            if (context.Request.Path.StartsWithSegments(pathPrefix, out var remainingPath))
+            {
+                // Build destination URL
+                var targetUri = destination.TrimEnd('/') + pathPrefix + remainingPath + context.Request.QueryString;
+
+                var requestMessage = new HttpRequestMessage();
+                requestMessage.Method = new HttpMethod(context.Request.Method);
+                requestMessage.RequestUri = new Uri(targetUri);
+
+                
+
+                // Copy body if needed
+                if (context.Request.ContentLength > 0 || context.Request.Body.CanRead)
+                {
+                    requestMessage.Content = new StreamContent(context.Request.Body);
+
+                    // Copy headers
+                    foreach (var header in context.Request.Headers)
+                    {
+                        if (header.Key.StartsWith("Content-", StringComparison.OrdinalIgnoreCase))
+                        {
+                            requestMessage.Content.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
+                        }
+                    }
+                }
+
+                // Send to downstream service
+                var responseMessage = await _httpClient.SendAsync(requestMessage, HttpCompletionOption.ResponseHeadersRead, context.RequestAborted);
+
+                context.Response.StatusCode = (int)responseMessage.StatusCode;
+
+                foreach (var header in responseMessage.Headers)
+                {
+                    context.Response.Headers[header.Key] = header.Value.ToArray();
+                }
+
+                foreach (var header in responseMessage.Content.Headers)
+                {
+                    context.Response.Headers[header.Key] = header.Value.ToArray();
+                }
+
+                await responseMessage.Content.CopyToAsync(context.Response.Body);
+                return;
+            }
+        }
+
+        // No match → continue normal pipeline
+        await _next(context);
+    }
+}

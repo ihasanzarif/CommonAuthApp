@@ -1,22 +1,16 @@
 using CommonAuthApp.Web.Components;
 using CommonAuthApp.Web.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Polly;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+// Add services to the container
 
-// HttpClient for Auth Service validation
-builder.Services.AddHttpClient();
-builder.Services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
-// YARP Reverse Proxy
-builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-
-builder.Services.AddControllers();
 // Swagger
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -27,6 +21,31 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Gateway for Admin & Staff services"
     });
 });
+
+string secret = builder.Configuration.GetValue<string>("Jwt:Secret");
+string issuer = builder.Configuration.GetValue<string>("Jwt:Issuer");
+string audience = builder.Configuration.GetValue<string>("Jwt:Audience");
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = issuer,
+        ValidAudience = audience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
+    };
+});
+builder.Services.AddAuthorization();
+//  Add HttpClient for RoleAuthorizationMiddleware
+builder.Services.AddHttpClient("GatewayClient")
+    .SetHandlerLifetime(TimeSpan.FromMinutes(5)) // Reuse handlers
+    .AddTransientHttpErrorPolicy(p => p.RetryAsync(3)) // Polly retry
+    .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
 var app = builder.Build();
 
@@ -41,12 +60,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseStaticFiles();
 app.UseRouting();
-app.UseMiddleware<RoleAuthorizationMiddleware>();
 
-app.MapReverseProxy();
-app.MapRazorPages();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.UseMiddleware<RoleAuthorizationMiddleware>();
 
 app.Run();

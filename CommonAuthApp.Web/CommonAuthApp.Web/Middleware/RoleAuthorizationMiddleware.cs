@@ -1,138 +1,163 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
-using System.Text.RegularExpressions;
-using Yarp.ReverseProxy.Configuration;
+﻿using System.Text.Json;
 
 namespace CommonAuthApp.Web.Middleware
 {
     public class RoleAuthorizationMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IHttpClientFactory _clientFactory;
+        private readonly HttpClient _httpClient;
         private readonly IConfiguration _config;
+        private readonly HashSet<string> _publicEndpoints;
 
         public RoleAuthorizationMiddleware(RequestDelegate next, IHttpClientFactory clientFactory, IConfiguration config)
         {
             _next = next;
-            _clientFactory = clientFactory;
+            _httpClient = clientFactory.CreateClient("GatewayClient"); // Named client with Polly policies
             _config = config;
+
+            // Load public endpoints from config into a set for fast lookup
+            _publicEndpoints = _config
+                .GetSection("Gateway:PublicEndpoints")
+                .Get<string[]>()
+                ?.Select(p => p.ToLowerInvariant())
+                .ToHashSet() ?? new HashSet<string>();
         }
 
         public async Task Invoke(HttpContext context)
         {
-            var endpoint = context.GetEndpoint();
-            if (endpoint == null)
+            var path = context.Request.Path.ToString().ToLowerInvariant();
+
+            // 🔹 Allow requests that match public endpoints
+            if (_publicEndpoints.Any(pub => path.StartsWith(pub)))
             {
-                await _next(context);
+                await ForwardRequest(context);
                 return;
             }
 
-            var routeName = context.GetEndpoint()?.Metadata.GetMetadata<RouteNameMetadata>()?.RouteName;
-
-            if (string.IsNullOrEmpty(routeName))
-            {
-                await _next(context);
-                return;
-            }
-
-            var allowedRolesCsv = _config[$"ReverseProxy:Routes:{routeName}:Metadata:AllowedRoles"];
-            if (string.IsNullOrWhiteSpace(allowedRolesCsv))
-            {
-                await _next(context); // public route
-                return;
-            }
-
-            // Expect Bearer token
-            var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-            if (string.IsNullOrWhiteSpace(authHeader))
+            // 🔹 Require JWT for everything else
+            if (!context.User.Identity?.IsAuthenticated ?? true)
             {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Missing Authorization header.");
+                await context.Response.WriteAsync("Unauthorized: A valid token is required.");
                 return;
             }
 
-            var token = authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase)
-                ? authHeader.Substring("Bearer ".Length)
-                : authHeader;
+            // 🔹 Forward authenticated requests
+            await ForwardRequest(context);
+        }
 
-            // Pick correct Auth service
-            var validateUrl = PickValidateUrlFromAllowedRoles(allowedRolesCsv);
-            if (string.IsNullOrWhiteSpace(validateUrl))
+        private async Task ForwardRequest(HttpContext context)
+        {
+            var serviceRoutes = _config.GetSection("ServiceRoutes").GetChildren();
+
+            foreach (var route in serviceRoutes)
             {
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await context.Response.WriteAsync("Gateway misconfiguration: missing validation URL.");
-                return;
+                var pathPrefix = route["PathPrefix"];
+                var destinations = route.GetSection("Destinations").Get<string[]>();
+
+                if (string.IsNullOrWhiteSpace(pathPrefix) || destinations == null || destinations.Length == 0)
+                    continue;
+
+                if (context.Request.Path.StartsWithSegments(pathPrefix, out var remainingPath))
+                {
+                    foreach (var destination in destinations)
+                    {
+                        try
+                        {
+                            var targetUri = $"{destination.TrimEnd('/')}{pathPrefix}{remainingPath}{context.Request.QueryString}";
+
+                            using var requestMessage = BuildRequestMessage(context, targetUri);
+
+                            // 🔹 Add claims header
+                            if (context.User.Identity?.IsAuthenticated ?? false)
+                            {
+                                var claims = context.User.Claims.Select(c => new { c.Type, c.Value });
+                                var claimsJson = JsonSerializer.Serialize(claims);
+                                requestMessage.Headers.TryAddWithoutValidation("X-User-Claims", claimsJson);
+                            }
+
+                            using var responseMessage = await _httpClient.SendAsync(
+                                requestMessage,
+                                HttpCompletionOption.ResponseHeadersRead,
+                                context.RequestAborted
+                            );
+
+                            // 🔹 Stream response body
+                            await CopyResponseAsync(context, responseMessage);
+                            return;
+                        }
+                        catch (HttpRequestException)
+                        {
+                            continue; // Try next destination
+                        }
+                    }
+
+                    // All destinations failed
+                    context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+                    await context.Response.WriteAsync("All destinations are unavailable.");
+                    return;
+                }
             }
 
-            // Call Auth service
-            var client = _clientFactory.CreateClient();
-            var req = new HttpRequestMessage(HttpMethod.Get, validateUrl);
-            req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            HttpResponseMessage authResp;
-            try
-            {
-                authResp = await client.SendAsync(req);
-            }
-            catch (Exception ex)
-            {
-                context.Response.StatusCode = StatusCodes.Status502BadGateway;
-                await context.Response.WriteAsync($"Auth service unreachable: {ex.Message}");
-                return;
-            }
-
-            if (!authResp.IsSuccessStatusCode)
-            {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Invalid token.");
-                return;
-            }
-
-            // Check role in JWT
-            var handler = new JwtSecurityTokenHandler();
-            JwtSecurityToken? jwt = null;
-            try { jwt = handler.ReadJwtToken(token); } catch { }
-
-            var userRoles = GetRoles(jwt);
-            var allowed = allowedRolesCsv.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-            if (!userRoles.Any(r => allowed.Contains(r, StringComparer.OrdinalIgnoreCase)))
-            {
-                context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                await context.Response.WriteAsync("Forbidden: missing required role.");
-                return;
-            }
-
+            // No matching route → continue normal pipeline
             await _next(context);
         }
 
-        private string? PickValidateUrlFromAllowedRoles(string allowedRolesCsv)
+        private HttpRequestMessage BuildRequestMessage(HttpContext context, string targetUri)
         {
-            var roles = allowedRolesCsv.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-            // If any Admin is required, use Admin auth service; otherwise use Staff auth service
-            if (roles.Any(r => r.Equals("Admin", StringComparison.OrdinalIgnoreCase)))
-                return _config["AuthenticationService:AdminValidateUrl"];
-
-            return _config["AuthenticationService:StaffValidateUrl"];
-        }
-
-        private static IEnumerable<string> GetRoles(JwtSecurityToken? jwt)
-        {
-            if (jwt is null) return Enumerable.Empty<string>();
-
-            var roleClaimTypes = new[]
+            var requestMessage = new HttpRequestMessage
             {
-                "role",
-                "roles",
-                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+                Method = new HttpMethod(context.Request.Method),
+                RequestUri = new Uri(targetUri)
             };
 
-            return jwt.Claims
-                .Where(c => roleClaimTypes.Contains(c.Type, StringComparer.OrdinalIgnoreCase))
-                .SelectMany(c => c.Value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
-                .Distinct(StringComparer.OrdinalIgnoreCase);
+            // Copy headers except Authorization
+            foreach (var header in context.Request.Headers.Where(h => !h.Key.Equals("Authorization", StringComparison.OrdinalIgnoreCase)))
+            {
+                requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
+            }
+
+            // Copy body if present
+            if (context.Request.ContentLength > 0 || context.Request.Body.CanRead)
+            {
+                requestMessage.Content = new StreamContent(context.Request.Body);
+
+                foreach (var header in context.Request.Headers)
+                {
+                    if (header.Key.StartsWith("Content-", StringComparison.OrdinalIgnoreCase))
+                    {
+                        requestMessage.Content.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
+                    }
+                }
+            }
+
+            return requestMessage;
+        }
+
+        private static async Task CopyResponseAsync(HttpContext context, HttpResponseMessage responseMessage)
+        {
+            context.Response.StatusCode = (int)responseMessage.StatusCode;
+
+            foreach (var header in responseMessage.Headers)
+            {
+                context.Response.Headers[header.Key] = header.Value.ToArray();
+            }
+
+            foreach (var header in responseMessage.Content.Headers)
+            {
+                context.Response.Headers[header.Key] = header.Value.ToArray();
+            }
+
+            // Remove conflicting headers
+            context.Response.Headers.Remove("transfer-encoding");
+
+            // Ensure the content type is set
+            if (!context.Response.Headers.ContainsKey("Content-Type"))
+                context.Response.ContentType = responseMessage.Content.Headers.ContentType?.ToString() ?? "application/json";
+
+            // Copy the content as string to ensure proper JSON response
+            var contentString = await responseMessage.Content.ReadAsStringAsync();
+            await context.Response.WriteAsync(contentString);
         }
     }
 }

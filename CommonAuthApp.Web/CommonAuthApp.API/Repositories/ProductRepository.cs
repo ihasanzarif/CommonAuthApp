@@ -17,6 +17,11 @@ namespace CommonAuthApp.Repositories
         Task<ProductModel> CreateProduct(ProductModel productModel);
         Task<bool> ProductModelExists(int id);
         Task DeleteProduct(int id);
+        Task<SchoolMenu> CreateSchoolMenu(SchoolMenu schoolModel);
+        Task<List<SchoolModel>> GetSchools();
+        Task<SchoolModel> CreateSchool(SchoolModel schoolModel);
+        Task<SchoolModel> GetSchool(int id);
+        Task<SchoolSystemDetails> CreateSchoolSystem(SchoolSystemDetails schoolSystem);
     }
     public class ProductRepository(AppDbContext dbContext) : IProductRepository
     {
@@ -50,6 +55,37 @@ namespace CommonAuthApp.Repositories
             var product = dbContext.Products.FirstOrDefault(n => n.ID == id);
             dbContext.Products.Remove(product);
             await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<SchoolMenu> CreateSchoolMenu(SchoolMenu schoolModel)
+        {
+            dbContext.SchoolMenus.Add(schoolModel);
+            await dbContext.SaveChangesAsync();
+            return schoolModel;
+        }
+
+        public Task<List<SchoolModel>> GetSchools()
+        {
+            return dbContext.Schools.ToListAsync();
+        }
+
+        public async Task<SchoolModel> CreateSchool(SchoolModel schoolModel)
+        {
+            dbContext.Schools.Add(schoolModel);
+            await dbContext.SaveChangesAsync();
+            return schoolModel;
+        }
+
+        public Task<SchoolModel> GetSchool(int id)
+        {
+            return dbContext.Schools.FirstOrDefaultAsync(n => n.SchoolId == id);
+        }
+
+        public async Task<SchoolSystemDetails> CreateSchoolSystem(SchoolSystemDetails schoolSystem)
+        {
+            dbContext.SchoolSystemDetails.Add(schoolSystem);
+            await dbContext.SaveChangesAsync();
+            return schoolSystem;
         }
     }
 }

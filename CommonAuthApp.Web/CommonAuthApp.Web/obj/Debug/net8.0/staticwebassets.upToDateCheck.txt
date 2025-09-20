@@ -3650,4 +3650,4 @@ wwwroot\assets\libs\wnumb\wNumb.min.js
 wwwroot\bootstrap\bootstrap.min.css
 wwwroot\bootstrap\bootstrap.min.css.map
 wwwroot\favicon.png
-D:\MY APP PROJECTS\CommonAuthApp.Web\CommonAuthApp.Web\wwwroot\assets\libs\@tarekraafat\autocomplete.js\autoComplete.min.js
+D:\MY APP PROJECTS\commonAuthService\CommonAuthApp.Web\CommonAuthApp.Web\wwwroot\assets\libs\@tarekraafat\autocomplete.js\autoComplete.min.js

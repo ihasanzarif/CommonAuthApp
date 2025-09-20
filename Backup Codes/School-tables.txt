@@ -1,0 +1,36 @@
+SchoolList
+1. SchoolId
+2. SchoolCode
+3. SchoolName
+4. SchoolEiin
+5. SchoolType
+6. SchoolDivision
+7. SchoolDistrict
+8. SchoolThana
+9. SchoolPostalCode
+10. SchoolArea
+11. SchoolAddress
+12. SchoolContactPerson
+13. SchoolContactPersonPosition
+14. SchoolConactPersonMobileNo
+15. SchoolIsActive
+16. SchoolLogoPath
+17. CreatedDate
+18. CreatedBy
+
+SchoolSystemDetails
+1. SystemDetailsId
+2. SchoolId
+3. SchoolServerIP
+4. SchoolServerPort
+5. SchoolDBName
+6. SchoolDBServer
+7. SchoolDBPort
+8. SchoolDBUsername
+9. SchoolDBPass
+10. SchoolDBSystemName
+11. SchoolDBConnectionString
+12. CreatedDate
+13. CreatedBy
+	
+	

@@ -19,5 +19,8 @@ namespace CommonAuthApp.API.Data
         public DbSet<RefreshTokenModel> RefreshTokens { get; set; }
         public DbSet<UserRoleModel> UserRoles { get; set; }
         public DbSet<RoleModel> Roles { get; set; }
+        public DbSet<SchoolMenu> SchoolMenus { get; set; }
+        public DbSet<SchoolModel> Schools { get; set; }
+        public DbSet<SchoolSystemDetails> SchoolSystemDetails { get; set; }
     }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CommonAuthApp.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8aa13e5c73be9cc26ef2839f918263e24d25d423")]
 [assembly: System.Reflection.AssemblyProductAttribute("CommonAuthApp.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CommonAuthApp.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

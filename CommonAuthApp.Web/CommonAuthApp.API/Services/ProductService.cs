@@ -16,7 +16,13 @@ namespace CommonAuthApp.Services
         Task<ProductModel> CreateProduct(ProductModel productModel);
         Task<bool> ProductModelExists(int id);
         Task DeleteProduct(int id);
+        Task<SchoolMenu> CreateSchoolMenu(SchoolMenu schoolModel);
+        Task<List<SchoolModel>> GetSchools();
+        Task<SchoolModel> CreateSchool(SchoolModel schoolModel);
+        Task<SchoolModel> GetSchool(int id);
+        Task<SchoolSystemDetails> CreateSchoolSystem(SchoolSystemDetails schoolSystem);
     }
+
     public class ProductService(IProductRepository productRepository) : IProductService
     {
         public Task<ProductModel> CreateProduct(ProductModel productModel)
@@ -46,6 +52,31 @@ namespace CommonAuthApp.Services
         public Task DeleteProduct(int id)
         {
             return productRepository.DeleteProduct(id);
+        }
+
+        public Task<SchoolMenu> CreateSchoolMenu(SchoolMenu schoolModel)
+        {
+            return productRepository.CreateSchoolMenu(schoolModel);
+        }
+
+        public Task<List<SchoolModel>> GetSchools()
+        {
+            return productRepository.GetSchools();
+        }
+
+        public Task<SchoolModel> CreateSchool(SchoolModel schoolModel)
+        {
+            return productRepository.CreateSchool(schoolModel);
+        }
+
+        public Task<SchoolModel> GetSchool(int id)
+        {
+            return productRepository.GetSchool(id);
+        }
+
+        public Task<SchoolSystemDetails> CreateSchoolSystem(SchoolSystemDetails schoolSystem)
+        {
+            return productRepository.CreateSchoolSystem(schoolSystem);
         }
     }
 }

@@ -1,0 +1,109 @@
+// appsettings.json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning",
+      "Microsoft.EntityFrameworkCore.Database.Command": "Information"
+    }
+  },
+  "AllowedHosts": "*",
+  "DatabaseType": "PostgreSQL", // Change to "SqlServer" or "Oracle" as needed
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=myapp_main;Username=postgres;Password=yourpassword;"
+  }
+}
+
+// appsettings.Development.json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "DatabaseType": "PostgreSQL",
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=myapp_dev;Username=postgres;Password=yourpassword;"
+  }
+}
+
+// Example connection strings for different databases:
+
+// PostgreSQL
+"DefaultConnection": "Host=192.168.1.100;Port=5432;Database=myapp;Username=myuser;Password=mypassword;Pooling=true;"
+
+// SQL Server
+"DefaultConnection": "Server=192.168.1.100,1433;Database=myapp;User Id=sa;Password=YourPassword123;TrustServerCertificate=true;MultipleActiveResultSets=true;"
+
+// Oracle
+"DefaultConnection": "Data Source=192.168.1.100:1521/XE;User Id=myuser;Password=mypassword;Pooling=true;"
+
+// Commands to run:
+
+// 1. Create a new project
+// dotnet new webapi -n MultiDbApp
+// cd MultiDbApp
+
+// 2. Install packages
+// dotnet add package Microsoft.EntityFrameworkCore
+// dotnet add package Microsoft.EntityFrameworkCore.Design
+// dotnet add package Microsoft.EntityFrameworkCore.Tools
+// dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+// dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+// dotnet add package Oracle.EntityFrameworkCore
+
+// 3. Create migrations (run these commands in the project directory)
+// For PostgreSQL:
+// dotnet ef migrations add InitialCreate --context ApplicationDbContext
+// dotnet ef database update --context ApplicationDbContext
+
+// For SQL Server (change connection string in appsettings.json first):
+// dotnet ef migrations add InitialCreate_SqlServer --context ApplicationDbContext
+// dotnet ef database update --context ApplicationDbContext
+
+// For Oracle (change connection string in appsettings.json first):
+// dotnet ef migrations add InitialCreate_Oracle --context ApplicationDbContext
+// dotnet ef database update --context ApplicationDbContext
+
+// 4. Run the application
+// dotnet run
+
+// Docker Compose for testing (docker-compose.yml)
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: myapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: yourpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: YourPassword123!
+      ACCEPT_EULA: Y
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+  oracle:
+    image: container-registry.oracle.com/database/express:21.3.0-xe
+    environment:
+      ORACLE_PWD: YourPassword123
+    ports:
+      - "1521:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+
+volumes:
+  postgres_data:
+  sqlserver_data:
+  oracle_data:

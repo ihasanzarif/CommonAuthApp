@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\CommonAuthApp.Web.csproj": {}
+    "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.Web\\CommonAuthApp.Web.csproj": {}
   },
   "projects": {
-    "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj": {
+    "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj",
+        "projectUniqueName": "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj",
         "projectName": "CommonAuthApp.API",
-        "projectPath": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj",
+        "projectPath": "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\obj\\",
+        "outputPath": "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -114,14 +114,14 @@
         }
       }
     },
-    "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\CommonAuthApp.Web.csproj": {
+    "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.Web\\CommonAuthApp.Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\CommonAuthApp.Web.csproj",
+        "projectUniqueName": "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.Web\\CommonAuthApp.Web.csproj",
         "projectName": "CommonAuthApp.Web",
-        "projectPath": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\CommonAuthApp.Web.csproj",
+        "projectPath": "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.Web\\CommonAuthApp.Web.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.Web\\obj\\",
+        "outputPath": "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.Web\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -142,8 +142,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj": {
-                "projectPath": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj"
+              "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj": {
+                "projectPath": "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj"
               }
             }
           }
@@ -181,6 +181,10 @@
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[8.0.19, )"
+            },
+            "Microsoft.Extensions.Http.Polly": {
+              "target": "Package",
+              "version": "[8.0.20, )"
             },
             "Microsoft.IdentityModel.Tokens": {
               "target": "Package",

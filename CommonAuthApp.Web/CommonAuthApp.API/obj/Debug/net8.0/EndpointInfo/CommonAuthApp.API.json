@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Auth/login": {
+    "/admin/Auth/login": {
       "post": {
         "tags": [
           "Auth"
@@ -53,10 +53,10 @@
         }
       }
     },
-    "/api/Product": {
+    "/admin/Setup/products": {
       "get": {
         "tags": [
-          "Product"
+          "Setup"
         ],
         "responses": {
           "200": {
@@ -80,10 +80,12 @@
             }
           }
         }
-      },
+      }
+    },
+    "/admin/Setup": {
       "post": {
         "tags": [
-          "Product"
+          "Setup"
         ],
         "requestBody": {
           "content": {
@@ -128,10 +130,10 @@
         }
       }
     },
-    "/api/Product/{id}": {
+    "/admin/Setup/{id}": {
       "get": {
         "tags": [
-          "Product"
+          "Setup"
         ],
         "parameters": [
           {
@@ -169,7 +171,7 @@
       },
       "put": {
         "tags": [
-          "Product"
+          "Setup"
         ],
         "parameters": [
           {
@@ -209,7 +211,7 @@
       },
       "delete": {
         "tags": [
-          "Product"
+          "Setup"
         ],
         "parameters": [
           {

@@ -1,0 +1,780 @@
+// Install these NuGet packages:
+// dotnet add package Microsoft.EntityFrameworkCore
+// dotnet add package Microsoft.EntityFrameworkCore.Design
+// dotnet add package Microsoft.EntityFrameworkCore.Tools
+// dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+// dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+// dotnet add package Oracle.EntityFrameworkCore
+// dotnet add package System.Data.SqlClient
+// dotnet add package Npgsql
+
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.SqlClient;
+using Npgsql;
+using Oracle.ManagedDataAccess.Client;
+
+// DTOs for API
+public class CreateDatabaseRequest
+{
+    [Required]
+    public string DatabaseName { get; set; } = string.Empty;
+    
+    [Required]
+    public string IpAddress { get; set; } = string.Empty;
+    
+    [Required]
+    public int Port { get; set; }
+    
+    [Required]
+    public string Username { get; set; } = string.Empty;
+    
+    [Required]
+    public string Password { get; set; } = string.Empty;
+    
+    [Required]
+    public string DatabaseType { get; set; } = string.Empty; // PostgreSQL, SqlServer, Oracle
+    
+    public string? AdminUsername { get; set; } // For database creation (like 'sa' for SQL Server)
+    public string? AdminPassword { get; set; } // For database creation
+}
+
+public class DatabaseCreationResult
+{
+    public bool Success { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public string? ConnectionString { get; set; }
+    public List<string> ExecutedSteps { get; set; } = new();
+    public string? Error { get; set; }
+}
+
+// Models (same as before)
+public class DatabaseConnection
+{
+    [Key]
+    public int Id { get; set; }
+    
+    [Required]
+    [MaxLength(255)]
+    public string Name { get; set; } = string.Empty;
+    
+    [Required]
+    [MaxLength(15)]
+    public string IpAddress { get; set; } = string.Empty;
+    
+    [Required]
+    public int Port { get; set; }
+    
+    [Required]
+    [MaxLength(100)]
+    public string Username { get; set; } = string.Empty;
+    
+    [Required]
+    [MaxLength(255)]
+    public string Password { get; set; } = string.Empty;
+    
+    [Required]
+    [MaxLength(50)]
+    public string DatabaseType { get; set; } = string.Empty;
+    
+    [MaxLength(255)]
+    public string DatabaseName { get; set; } = string.Empty;
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+    
+    public bool IsActive { get; set; } = true;
+    public bool DatabaseCreated { get; set; } = false;
+}
+
+public class SetupConfiguration
+{
+    [Key]
+    public int Id { get; set; }
+    
+    [Required]
+    [MaxLength(100)]
+    public string ConfigKey { get; set; } = string.Empty;
+    
+    [Required]
+    public string ConfigValue { get; set; } = string.Empty;
+    
+    [MaxLength(500)]
+    public string? Description { get; set; }
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+}
+
+public class ApplicationLog
+{
+    [Key]
+    public int Id { get; set; }
+    
+    [Required]
+    [MaxLength(50)]
+    public string Level { get; set; } = string.Empty;
+    
+    [Required]
+    public string Message { get; set; } = string.Empty;
+    
+    public string? Exception { get; set; }
+    
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    public int? DatabaseConnectionId { get; set; }
+    public DatabaseConnection? DatabaseConnection { get; set; }
+}
+
+// Enhanced DbContext
+public class ApplicationDbContext : DbContext
+{
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+    }
+
+    public DbSet<DatabaseConnection> DatabaseConnections { get; set; }
+    public DbSet<SetupConfiguration> SetupConfigurations { get; set; }
+    public DbSet<ApplicationLog> ApplicationLogs { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<DatabaseConnection>(entity =>
+        {
+            entity.ToTable("database_connections");
+            entity.HasIndex(e => new { e.Name, e.DatabaseName }).IsUnique();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        modelBuilder.Entity<SetupConfiguration>(entity =>
+        {
+            entity.ToTable("setup_configurations");
+            entity.HasIndex(e => e.ConfigKey).IsUnique();
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        modelBuilder.Entity<ApplicationLog>(entity =>
+        {
+            entity.ToTable("application_logs");
+            entity.HasOne(d => d.DatabaseConnection)
+                  .WithMany()
+                  .HasForeignKey(d => d.DatabaseConnectionId)
+                  .OnDelete(DeleteBehavior.SetNull);
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
+        });
+
+        modelBuilder.Entity<SetupConfiguration>().HasData(
+            new SetupConfiguration 
+            { 
+                Id = 1, 
+                ConfigKey = "DefaultTimeout", 
+                ConfigValue = "30", 
+                Description = "Default connection timeout in seconds" 
+            },
+            new SetupConfiguration 
+            { 
+                Id = 2, 
+                ConfigKey = "MaxRetryAttempts", 
+                ConfigValue = "3", 
+                Description = "Maximum retry attempts for failed connections" 
+            }
+        );
+    }
+}
+
+public enum DatabaseType
+{
+    PostgreSQL,
+    SqlServer,
+    Oracle
+}
+
+// Enhanced Database Factory
+public interface IDatabaseFactory
+{
+    ApplicationDbContext CreateContext(DatabaseType dbType, string connectionString);
+    Task<DatabaseCreationResult> CreateDatabaseAsync(CreateDatabaseRequest request);
+    Task<bool> DatabaseExistsAsync(CreateDatabaseRequest request);
+    string BuildConnectionString(CreateDatabaseRequest request, bool includeDatabase = true);
+    string BuildAdminConnectionString(CreateDatabaseRequest request);
+}
+
+public class DatabaseFactory : IDatabaseFactory
+{
+    public ApplicationDbContext CreateContext(DatabaseType dbType, string connectionString)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+
+        switch (dbType)
+        {
+            case DatabaseType.PostgreSQL:
+                optionsBuilder.UseNpgsql(connectionString);
+                break;
+            case DatabaseType.SqlServer:
+                optionsBuilder.UseSqlServer(connectionString);
+                break;
+            case DatabaseType.Oracle:
+                optionsBuilder.UseOracle(connectionString);
+                break;
+            default:
+                throw new ArgumentException($"Unsupported database type: {dbType}");
+        }
+
+        return new ApplicationDbContext(optionsBuilder.Options);
+    }
+
+    public async Task<DatabaseCreationResult> CreateDatabaseAsync(CreateDatabaseRequest request)
+    {
+        var result = new DatabaseCreationResult();
+        
+        try
+        {
+            var dbType = Enum.Parse<DatabaseType>(request.DatabaseType, true);
+            
+            // Check if database already exists
+            if (await DatabaseExistsAsync(request))
+            {
+                result.Success = false;
+                result.Message = $"Database '{request.DatabaseName}' already exists.";
+                return result;
+            }
+
+            switch (dbType)
+            {
+                case DatabaseType.PostgreSQL:
+                    await CreatePostgreSQLDatabaseAsync(request, result);
+                    break;
+                case DatabaseType.SqlServer:
+                    await CreateSqlServerDatabaseAsync(request, result);
+                    break;
+                case DatabaseType.Oracle:
+                    await CreateOracleDatabaseAsync(request, result);
+                    break;
+            }
+
+            if (result.Success)
+            {
+                // Create tables using Entity Framework
+                await CreateTablesAsync(request, result);
+            }
+        }
+        catch (Exception ex)
+        {
+            result.Success = false;
+            result.Error = ex.Message;
+            result.Message = $"Failed to create database: {ex.Message}";
+        }
+
+        return result;
+    }
+
+    private async Task CreatePostgreSQLDatabaseAsync(CreateDatabaseRequest request, DatabaseCreationResult result)
+    {
+        var adminConnectionString = BuildAdminConnectionString(request);
+        
+        using var connection = new NpgsqlConnection(adminConnectionString);
+        await connection.OpenAsync();
+        result.ExecutedSteps.Add("Connected to PostgreSQL server");
+
+        var createDbCommand = $"CREATE DATABASE \"{request.DatabaseName}\" OWNER \"{request.Username}\"";
+        using var command = new NpgsqlCommand(createDbCommand, connection);
+        await command.ExecuteNonQueryAsync();
+        result.ExecutedSteps.Add($"Created database '{request.DatabaseName}'");
+
+        result.Success = true;
+        result.Message = "PostgreSQL database created successfully";
+        result.ConnectionString = BuildConnectionString(request);
+    }
+
+    private async Task CreateSqlServerDatabaseAsync(CreateDatabaseRequest request, DatabaseCreationResult result)
+    {
+        var adminConnectionString = BuildAdminConnectionString(request);
+        
+        using var connection = new SqlConnection(adminConnectionString);
+        await connection.OpenAsync();
+        result.ExecutedSteps.Add("Connected to SQL Server");
+
+        // Create database
+        var createDbCommand = $@"
+            IF NOT EXISTS (SELECT name FROM sys.databases WHERE name = N'{request.DatabaseName}')
+            BEGIN
+                CREATE DATABASE [{request.DatabaseName}]
+            END";
+        
+        using var command = new SqlCommand(createDbCommand, connection);
+        await command.ExecuteNonQueryAsync();
+        result.ExecutedSteps.Add($"Created database '{request.DatabaseName}'");
+
+        // Create login if it doesn't exist
+        if (!string.IsNullOrEmpty(request.Username) && request.Username.ToLower() != "sa")
+        {
+            var createLoginCommand = $@"
+                IF NOT EXISTS (SELECT name FROM sys.server_principals WHERE name = '{request.Username}')
+                BEGIN
+                    CREATE LOGIN [{request.Username}] WITH PASSWORD = '{request.Password}'
+                END";
+            
+            using var loginCommand = new SqlCommand(createLoginCommand, connection);
+            await loginCommand.ExecuteNonQueryAsync();
+            result.ExecutedSteps.Add($"Created login '{request.Username}'");
+
+            // Create user and grant permissions
+            connection.ChangeDatabase(request.DatabaseName);
+            var createUserCommand = $@"
+                IF NOT EXISTS (SELECT name FROM sys.database_principals WHERE name = '{request.Username}')
+                BEGIN
+                    CREATE USER [{request.Username}] FOR LOGIN [{request.Username}]
+                    ALTER ROLE db_owner ADD MEMBER [{request.Username}]
+                END";
+            
+            using var userCommand = new SqlCommand(createUserCommand, connection);
+            await userCommand.ExecuteNonQueryAsync();
+            result.ExecutedSteps.Add($"Created user '{request.Username}' with db_owner role");
+        }
+
+        result.Success = true;
+        result.Message = "SQL Server database created successfully";
+        result.ConnectionString = BuildConnectionString(request);
+    }
+
+    private async Task CreateOracleDatabaseAsync(CreateDatabaseRequest request, DatabaseCreationResult result)
+    {
+        var adminConnectionString = BuildAdminConnectionString(request);
+        
+        using var connection = new OracleConnection(adminConnectionString);
+        await connection.OpenAsync();
+        result.ExecutedSteps.Add("Connected to Oracle server");
+
+        // In Oracle, we typically create a user/schema instead of a separate database
+        var createUserCommand = $@"
+            CREATE USER {request.Username} 
+            IDENTIFIED BY {request.Password} 
+            DEFAULT TABLESPACE USERS 
+            TEMPORARY TABLESPACE TEMP 
+            QUOTA UNLIMITED ON USERS";
+
+        try
+        {
+            using var command = new OracleCommand(createUserCommand, connection);
+            await command.ExecuteNonQueryAsync();
+            result.ExecutedSteps.Add($"Created Oracle user '{request.Username}'");
+        }
+        catch (OracleException ex) when (ex.Number == 1920) // User already exists
+        {
+            result.ExecutedSteps.Add($"User '{request.Username}' already exists");
+        }
+
+        // Grant necessary privileges
+        var grantCommand = $@"
+            GRANT CONNECT, RESOURCE, CREATE VIEW, CREATE PROCEDURE, CREATE TRIGGER TO {request.Username}";
+        
+        using var grantCmd = new OracleCommand(grantCommand, connection);
+        await grantCmd.ExecuteNonQueryAsync();
+        result.ExecutedSteps.Add($"Granted privileges to user '{request.Username}'");
+
+        result.Success = true;
+        result.Message = "Oracle user/schema created successfully";
+        result.ConnectionString = BuildConnectionString(request);
+    }
+
+    private async Task CreateTablesAsync(CreateDatabaseRequest request, DatabaseCreationResult result)
+    {
+        try
+        {
+            var dbType = Enum.Parse<DatabaseType>(request.DatabaseType, true);
+            var connectionString = BuildConnectionString(request);
+            
+            using var context = CreateContext(dbType, connectionString);
+            await context.Database.EnsureCreatedAsync();
+            result.ExecutedSteps.Add("Created application tables using Entity Framework");
+        }
+        catch (Exception ex)
+        {
+            result.ExecutedSteps.Add($"Failed to create tables: {ex.Message}");
+            throw;
+        }
+    }
+
+    public async Task<bool> DatabaseExistsAsync(CreateDatabaseRequest request)
+    {
+        try
+        {
+            var dbType = Enum.Parse<DatabaseType>(request.DatabaseType, true);
+            var adminConnectionString = BuildAdminConnectionString(request);
+
+            switch (dbType)
+            {
+                case DatabaseType.PostgreSQL:
+                    using (var connection = new NpgsqlConnection(adminConnectionString))
+                    {
+                        await connection.OpenAsync();
+                        var command = new NpgsqlCommand($"SELECT 1 FROM pg_database WHERE datname = '{request.DatabaseName}'", connection);
+                        var result = await command.ExecuteScalarAsync();
+                        return result != null;
+                    }
+
+                case DatabaseType.SqlServer:
+                    using (var connection = new SqlConnection(adminConnectionString))
+                    {
+                        await connection.OpenAsync();
+                        var command = new SqlCommand($"SELECT database_id FROM sys.databases WHERE name = '{request.DatabaseName}'", connection);
+                        var result = await command.ExecuteScalarAsync();
+                        return result != null;
+                    }
+
+                case DatabaseType.Oracle:
+                    using (var connection = new OracleConnection(adminConnectionString))
+                    {
+                        await connection.OpenAsync();
+                        var command = new OracleCommand($"SELECT 1 FROM all_users WHERE username = UPPER('{request.Username}')", connection);
+                        var result = await command.ExecuteScalarAsync();
+                        return result != null;
+                    }
+
+                default:
+                    return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public string BuildConnectionString(CreateDatabaseRequest request, bool includeDatabase = true)
+    {
+        return request.DatabaseType.ToUpper() switch
+        {
+            "POSTGRESQL" => includeDatabase 
+                ? $"Host={request.IpAddress};Port={request.Port};Database={request.DatabaseName};Username={request.Username};Password={request.Password};Pooling=true;"
+                : $"Host={request.IpAddress};Port={request.Port};Database=postgres;Username={request.Username};Password={request.Password};Pooling=true;",
+            
+            "SQLSERVER" => includeDatabase 
+                ? $"Server={request.IpAddress},{request.Port};Database={request.DatabaseName};User Id={request.Username};Password={request.Password};TrustServerCertificate=true;MultipleActiveResultSets=true;"
+                : $"Server={request.IpAddress},{request.Port};User Id={request.Username};Password={request.Password};TrustServerCertificate=true;MultipleActiveResultSets=true;",
+            
+            "ORACLE" => $"Data Source={request.IpAddress}:{request.Port}/XE;User Id={request.Username};Password={request.Password};Pooling=true;",
+            
+            _ => throw new ArgumentException($"Unsupported database type: {request.DatabaseType}")
+        };
+    }
+
+    public string BuildAdminConnectionString(CreateDatabaseRequest request)
+    {
+        var adminUser = request.AdminUsername ?? request.Username;
+        var adminPassword = request.AdminPassword ?? request.Password;
+
+        return request.DatabaseType.ToUpper() switch
+        {
+            "POSTGRESQL" => $"Host={request.IpAddress};Port={request.Port};Database=postgres;Username={adminUser};Password={adminPassword};Pooling=true;",
+            "SQLSERVER" => $"Server={request.IpAddress},{request.Port};User Id={adminUser};Password={adminPassword};TrustServerCertificate=true;MultipleActiveResultSets=true;",
+            "ORACLE" => $"Data Source={request.IpAddress}:{request.Port}/XE;User Id={adminUser};Password={adminPassword};Pooling=true;",
+            _ => throw new ArgumentException($"Unsupported database type: {request.DatabaseType}")
+        };
+    }
+}
+
+// Enhanced Database Service
+public interface IDatabaseService
+{
+    Task<bool> TestConnectionAsync(DatabaseConnection connection);
+    Task<ApplicationDbContext> GetContextAsync(int connectionId);
+    Task<DatabaseCreationResult> CreateDatabaseFromUIAsync(CreateDatabaseRequest request);
+    Task<DatabaseConnection> SaveDatabaseConnectionAsync(CreateDatabaseRequest request);
+}
+
+public class DatabaseService : IDatabaseService
+{
+    private readonly IDatabaseFactory _databaseFactory;
+    private readonly ApplicationDbContext _mainContext;
+
+    public DatabaseService(IDatabaseFactory databaseFactory, ApplicationDbContext mainContext)
+    {
+        _databaseFactory = databaseFactory;
+        _mainContext = mainContext;
+    }
+
+    public async Task<DatabaseCreationResult> CreateDatabaseFromUIAsync(CreateDatabaseRequest request)
+    {
+        return await _databaseFactory.CreateDatabaseAsync(request);
+    }
+
+    public async Task<DatabaseConnection> SaveDatabaseConnectionAsync(CreateDatabaseRequest request)
+    {
+        var connection = new DatabaseConnection
+        {
+            Name = $"{request.DatabaseName}_{request.DatabaseType}",
+            IpAddress = request.IpAddress,
+            Port = request.Port,
+            Username = request.Username,
+            Password = request.Password,
+            DatabaseType = request.DatabaseType,
+            DatabaseName = request.DatabaseName,
+            DatabaseCreated = true,
+            IsActive = true
+        };
+
+        _mainContext.DatabaseConnections.Add(connection);
+        await _mainContext.SaveChangesAsync();
+        
+        return connection;
+    }
+
+    public async Task<bool> TestConnectionAsync(DatabaseConnection connection)
+    {
+        try
+        {
+            var connectionString = BuildConnectionString(connection);
+            var dbType = Enum.Parse<DatabaseType>(connection.DatabaseType);
+            
+            using var context = _databaseFactory.CreateContext(dbType, connectionString);
+            await context.Database.CanConnectAsync();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public async Task<ApplicationDbContext> GetContextAsync(int connectionId)
+    {
+        var connection = await _mainContext.DatabaseConnections
+            .FirstOrDefaultAsync(x => x.Id == connectionId && x.IsActive);
+        
+        if (connection == null)
+            throw new ArgumentException($"Database connection with ID {connectionId} not found or inactive");
+
+        var connectionString = BuildConnectionString(connection);
+        var dbType = Enum.Parse<DatabaseType>(connection.DatabaseType);
+        
+        return _databaseFactory.CreateContext(dbType, connectionString);
+    }
+
+    private string BuildConnectionString(DatabaseConnection connection)
+    {
+        return connection.DatabaseType.ToUpper() switch
+        {
+            "POSTGRESQL" => $"Host={connection.IpAddress};Port={connection.Port};Database={connection.DatabaseName};Username={connection.Username};Password={connection.Password};Pooling=true;",
+            "SQLSERVER" => $"Server={connection.IpAddress},{connection.Port};Database={connection.DatabaseName};User Id={connection.Username};Password={connection.Password};TrustServerCertificate=true;MultipleActiveResultSets=true;",
+            "ORACLE" => $"Data Source={connection.IpAddress}:{connection.Port}/XE;User Id={connection.Username};Password={connection.Password};Pooling=true;",
+            _ => throw new ArgumentException($"Unsupported database type: {connection.DatabaseType}")
+        };
+    }
+}
+
+// Enhanced API Controller for UI Database Creation
+[ApiController]
+[Route("api/[controller]")]
+public class DatabaseManagementController : ControllerBase
+{
+    private readonly IDatabaseService _databaseService;
+    private readonly IDatabaseFactory _databaseFactory;
+    private readonly ApplicationDbContext _context;
+
+    public DatabaseManagementController(
+        IDatabaseService databaseService, 
+        IDatabaseFactory databaseFactory,
+        ApplicationDbContext context)
+    {
+        _databaseService = databaseService;
+        _databaseFactory = databaseFactory;
+        _context = context;
+    }
+
+    [HttpPost("create-database")]
+    public async Task<ActionResult<DatabaseCreationResult>> CreateDatabase(CreateDatabaseRequest request)
+    {
+        try
+        {
+            // Validate request
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check if database already exists
+            if (await _databaseFactory.DatabaseExistsAsync(request))
+            {
+                return BadRequest(new DatabaseCreationResult
+                {
+                    Success = false,
+                    Message = $"Database '{request.DatabaseName}' already exists."
+                });
+            }
+
+            // Create the database
+            var result = await _databaseService.CreateDatabaseFromUIAsync(request);
+
+            if (result.Success)
+            {
+                // Save connection info to our main database
+                var connection = await _databaseService.SaveDatabaseConnectionAsync(request);
+                result.Message += $" Connection saved with ID: {connection.Id}";
+            }
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new DatabaseCreationResult
+            {
+                Success = false,
+                Error = ex.Message,
+                Message = "Failed to create database due to an error."
+            });
+        }
+    }
+
+    [HttpPost("test-connection")]
+    public async Task<ActionResult> TestDatabaseConnection(CreateDatabaseRequest request)
+    {
+        try
+        {
+            // Test admin connection first
+            var adminConnectionString = _databaseFactory.BuildAdminConnectionString(request);
+            var dbType = Enum.Parse<DatabaseType>(request.DatabaseType, true);
+            
+            using var context = _databaseFactory.CreateContext(dbType, adminConnectionString);
+            var canConnect = await context.Database.CanConnectAsync();
+
+            return Ok(new { 
+                CanConnect = canConnect, 
+                ConnectionString = adminConnectionString.Replace(request.Password, "***"),
+                Message = canConnect ? "Connection successful" : "Connection failed"
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { 
+                CanConnect = false, 
+                Error = ex.Message,
+                Message = "Connection test failed"
+            });
+        }
+    }
+
+    [HttpGet("database-exists")]
+    public async Task<ActionResult> CheckDatabaseExists([FromQuery] CreateDatabaseRequest request)
+    {
+        try
+        {
+            var exists = await _databaseFactory.DatabaseExistsAsync(request);
+            return Ok(new { Exists = exists });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { Error = ex.Message });
+        }
+    }
+
+    [HttpGet("connections")]
+    public async Task<ActionResult<IEnumerable<DatabaseConnection>>> GetConnections()
+    {
+        var connections = await _context.DatabaseConnections
+            .Where(c => c.IsActive)
+            .Select(c => new 
+            {
+                c.Id,
+                c.Name,
+                c.IpAddress,
+                c.Port,
+                c.Username,
+                Password = "***", // Don't expose passwords
+                c.DatabaseType,
+                c.DatabaseName,
+                c.CreatedAt,
+                c.DatabaseCreated,
+                c.IsActive
+            })
+            .ToListAsync();
+
+        return Ok(connections);
+    }
+
+    [HttpDelete("connections/{id}")]
+    public async Task<ActionResult> DeleteConnection(int id)
+    {
+        var connection = await _context.DatabaseConnections.FindAsync(id);
+        if (connection == null)
+            return NotFound();
+
+        connection.IsActive = false;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { Message = "Connection deactivated successfully" });
+    }
+}
+
+// Program.cs
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddControllers();
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        // Configure CORS for UI integration
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
+        });
+
+        // Configure main database context
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            var databaseType = builder.Configuration.GetValue<string>("DatabaseType");
+
+            switch (databaseType?.ToUpper())
+            {
+                case "POSTGRESQL":
+                    options.UseNpgsql(connectionString);
+                    break;
+                case "SQLSERVER":
+                    options.UseSqlServer(connectionString);
+                    break;
+                case "ORACLE":
+                    options.UseOracle(connectionString);
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unsupported database type: {databaseType}");
+            }
+        });
+
+        builder.Services.AddScoped<IDatabaseFactory, DatabaseFactory>();
+        builder.Services.AddScoped<IDatabaseService, DatabaseService>();
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseCors();
+        app.UseHttpsRedirection();
+        app.MapControllers();
+
+        // Ensure main database exists
+        using (var scope = app.Services.CreateScope())
+        {
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            context.Database.EnsureCreated();
+        }
+
+        app.Run();
+    }
+}

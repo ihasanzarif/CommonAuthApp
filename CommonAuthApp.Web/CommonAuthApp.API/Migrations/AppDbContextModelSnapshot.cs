@@ -87,6 +87,153 @@ namespace CommonAuthApp.API.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("CommonAuthApp.API.Models.SchoolMenu", b =>
+                {
+                    b.Property<int>("MenuId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MenuId"));
+
+                    b.Property<int>("CreateBy")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MenuIsActive")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("MenuName")
+                        .HasColumnType("text");
+
+                    b.Property<int>("MenuSerial")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("MenuUrlPath")
+                        .HasColumnType("text");
+
+                    b.HasKey("MenuId");
+
+                    b.ToTable("SchoolMenus");
+                });
+
+            modelBuilder.Entity("CommonAuthApp.API.Models.SchoolModel", b =>
+                {
+                    b.Property<int>("SchoolId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SchoolId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SchoolAddress")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolArea")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolConactPersonMobileNo")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolContactPerson")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolContactPersonPosition")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolDistrict")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolDivision")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolEiin")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolLogoPath")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolPostalCode")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SchoolStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SchoolThana")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolType")
+                        .HasColumnType("text");
+
+                    b.HasKey("SchoolId");
+
+                    b.ToTable("Schools");
+                });
+
+            modelBuilder.Entity("CommonAuthApp.API.Models.SchoolSystemDetails", b =>
+                {
+                    b.Property<int>("SystemDetailsId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SystemDetailsId"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolDBConnectionString")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolDBName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolDBPass")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SchoolDBPort")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SchoolDBServer")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolDBSystemName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SchoolDBUsername")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SchoolServerIP")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SchoolServerPort")
+                        .HasColumnType("integer");
+
+                    b.HasKey("SystemDetailsId");
+
+                    b.ToTable("SchoolSystemDetails");
+                });
+
             modelBuilder.Entity("CommonAuthApp.API.Models.UserModel", b =>
                 {
                     b.Property<int>("ID")

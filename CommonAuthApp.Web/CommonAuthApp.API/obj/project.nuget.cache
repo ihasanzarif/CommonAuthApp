@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XCGkRTJ9Dn4=",
+  "dgSpecHash": "+jBGnMp6Khg=",
   "success": true,
-  "projectFilePath": "D:\\MY APP PROJECTS\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj",
+  "projectFilePath": "D:\\MY APP PROJECTS\\commonAuthService\\CommonAuthApp.Web\\CommonAuthApp.API\\CommonAuthApp.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\User\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\User\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

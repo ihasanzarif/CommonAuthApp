@@ -2,6 +2,7 @@
 using CommonAuthApp.API.Handlers;
 using CommonAuthApp.API.Models;
 using CommonAuthApp.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -14,6 +15,7 @@ namespace CommonAuthApp.API.Controllers
 {
     [Route("admin/[controller]")]
     [ApiController]
+    [Authorize(Policy = "JwtOnly")]
     public class AuthController : ControllerBase
     {
         private readonly IConfiguration _configuation;
@@ -26,6 +28,7 @@ namespace CommonAuthApp.API.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<ActionResult<LoginResponseModel>> Login([FromBody] LoginModel model)
         {
             if (model == null || string.IsNullOrEmpty(model.Username) || string.IsNullOrEmpty(model.Password))
