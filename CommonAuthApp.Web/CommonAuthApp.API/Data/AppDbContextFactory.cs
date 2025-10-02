@@ -16,9 +16,10 @@ namespace CommonAuthApp.API.Data
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
             // Use your PostgreSQL connection string
-            var connectionString = configuration.GetConnectionString("PostgresConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            optionsBuilder.UseNpgsql(connectionString);
+            //optionsBuilder.UseNpgsql(connectionString);
+            optionsBuilder.UseSqlServer(connectionString);
 
             return new AppDbContext(optionsBuilder.Options);
         }

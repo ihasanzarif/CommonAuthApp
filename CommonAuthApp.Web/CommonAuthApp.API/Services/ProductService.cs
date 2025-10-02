@@ -21,6 +21,7 @@ namespace CommonAuthApp.Services
         Task<SchoolModel> CreateSchool(SchoolModel schoolModel);
         Task<SchoolModel> GetSchool(int id);
         Task<SchoolSystemDetails> CreateSchoolSystem(SchoolSystemDetails schoolSystem);
+        Task<List<SchoolMenu>> GetSchoolMenu();
     }
 
     public class ProductService(IProductRepository productRepository) : IProductService
@@ -77,6 +78,11 @@ namespace CommonAuthApp.Services
         public Task<SchoolSystemDetails> CreateSchoolSystem(SchoolSystemDetails schoolSystem)
         {
             return productRepository.CreateSchoolSystem(schoolSystem);
+        }
+
+        public Task<List<SchoolMenu>> GetSchoolMenu()
+        {
+            return productRepository.GetSchoolMenu();
         }
     }
 }

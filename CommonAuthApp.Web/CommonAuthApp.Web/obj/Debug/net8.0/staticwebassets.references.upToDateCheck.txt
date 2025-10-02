@@ -133,3 +133,39 @@ D:\MY APP PROJECTS\commonAuthService\CommonAuthApp.Web\CommonAuthApp.API\obj\Deb
 D:\MY APP PROJECTS\commonAuthService\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
 D:\MY APP PROJECTS\commonAuthService\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
 D:\MY APP PROJECTS\commonAuthService\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json
+E:\API Projects\schoolAppEngine\CommonAuthApp.Web\CommonAuthApp.API\obj\Debug\net8.0\staticwebassets.build.json

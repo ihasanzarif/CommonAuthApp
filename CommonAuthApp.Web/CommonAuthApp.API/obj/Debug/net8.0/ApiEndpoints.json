@@ -133,5 +133,149 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "CommonAuthApp.API.Controllers.SetupController",
+    "Method": "GetSchool",
+    "RelativePath": "admin/Setup/school",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "CommonAuthApp.API.Models.BaseResponseModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CommonAuthApp.API.Controllers.SetupController",
+    "Method": "CreateSchool",
+    "RelativePath": "admin/Setup/school-create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "schoolModel",
+        "Type": "CommonAuthApp.API.Models.SchoolModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "CommonAuthApp.API.Models.SchoolModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CommonAuthApp.API.Controllers.SetupController",
+    "Method": "GetSchools",
+    "RelativePath": "admin/Setup/school-list",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "CommonAuthApp.API.Models.BaseResponseModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CommonAuthApp.API.Controllers.SetupController",
+    "Method": "CreateSchoolMenu",
+    "RelativePath": "admin/Setup/school-menu",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "schoolMenu",
+        "Type": "CommonAuthApp.API.Models.SchoolMenu",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "CommonAuthApp.API.Models.ProductModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CommonAuthApp.API.Controllers.SetupController",
+    "Method": "GetSchoolMenu",
+    "RelativePath": "admin/Setup/school-menu-list",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "CommonAuthApp.API.Models.BaseResponseModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CommonAuthApp.API.Controllers.SetupController",
+    "Method": "CreateSchoolSystem",
+    "RelativePath": "admin/Setup/school-system",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "schoolSystem",
+        "Type": "CommonAuthApp.API.Models.SchoolSystemDetails",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "CommonAuthApp.API.Models.SchoolModel",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   }
 ]

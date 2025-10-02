@@ -25,7 +25,7 @@ namespace CommonAuthApp.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductModel>> CreateProduct(ProductModel productModel)
+        public async Task<ActionResult<ProductModel>> CreateProduct([FromBody] ProductModel productModel)
         {
             await productService.CreateProduct(productModel);
             return Ok(new BaseResponseModel { Success = true });
@@ -69,10 +69,19 @@ namespace CommonAuthApp.API.Controllers
 
         [HttpPost]
         [Route("school-menu")]
-        public async Task<ActionResult<ProductModel>> CreateSchoolMenu(SchoolMenu schoolMenu)
+        public async Task<ActionResult<ProductModel>> CreateSchoolMenu([FromBody] SchoolMenu schoolMenu)
         {
             await productService.CreateSchoolMenu(schoolMenu);
             return Ok(new BaseResponseModel { Success = true });
+        }
+
+        [HttpGet]
+        [Route("school-menu-list")]
+        public async Task<ActionResult<BaseResponseModel>> GetSchoolMenu()
+        {
+            var schoolMenus = await productService.GetSchoolMenu();
+
+            return Ok(new BaseResponseModel { Success = true, Data = schoolMenus });
         }
 
         [HttpGet]
@@ -86,7 +95,7 @@ namespace CommonAuthApp.API.Controllers
 
         [HttpPost]
         [Route("school-create")]
-        public async Task<ActionResult<SchoolModel>> CreateSchool(SchoolModel schoolModel)
+        public async Task<ActionResult<SchoolModel>> CreateSchool([FromBody] SchoolModel schoolModel)
         {
             await productService.CreateSchool(schoolModel);
             return Ok(new BaseResponseModel { Success = true });
@@ -107,7 +116,7 @@ namespace CommonAuthApp.API.Controllers
 
         [HttpPost]
         [Route("school-system")]
-        public async Task<ActionResult<SchoolModel>> CreateSchoolSystem(SchoolSystemDetails schoolSystem)
+        public async Task<ActionResult<SchoolModel>> CreateSchoolSystem([FromBody] SchoolSystemDetails schoolSystem)
         {
             await productService.CreateSchoolSystem(schoolSystem);
             return Ok(new BaseResponseModel { Success = true });

@@ -22,6 +22,7 @@ namespace CommonAuthApp.Repositories
         Task<SchoolModel> CreateSchool(SchoolModel schoolModel);
         Task<SchoolModel> GetSchool(int id);
         Task<SchoolSystemDetails> CreateSchoolSystem(SchoolSystemDetails schoolSystem);
+        Task<List<SchoolMenu>> GetSchoolMenu();
     }
     public class ProductRepository(AppDbContext dbContext) : IProductRepository
     {
@@ -86,6 +87,11 @@ namespace CommonAuthApp.Repositories
             dbContext.SchoolSystemDetails.Add(schoolSystem);
             await dbContext.SaveChangesAsync();
             return schoolSystem;
+        }
+
+        public Task<List<SchoolMenu>> GetSchoolMenu()
+        {
+            return dbContext.SchoolMenus.ToListAsync();
         }
     }
 }
